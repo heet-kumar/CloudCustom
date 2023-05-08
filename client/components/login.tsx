@@ -51,7 +51,7 @@ const Login: React.FC = () => {
                         />
                     </div>
                     <button type="button" className="btn btn-outline-dark">Login</button>
-                    <a className="align-self-start btn btn-link link-offset-2 link-underline link-underline-opacity-0" role="button" >Create account</a>
+                    <a href="/signup" className="align-self-start btn btn-link link-offset-2 link-underline link-underline-opacity-0" role="button" >Create account</a>
                 </div>
             </div>
         </div>
