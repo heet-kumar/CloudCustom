@@ -1,12 +1,25 @@
 import {FaUserCircle} from 'react-icons/fa';
-import {RiLockPasswordFill, RiLockPasswordLine} from 'react-icons/ri'
+import {RiLockPasswordLine} from 'react-icons/ri'
 import {MdOutlineAlternateEmail} from 'react-icons/md'
-import { useState } from 'react';
+import { useEffect,useState } from 'react';
 
 
 const Login: React.FC = () => {
 
     const [msg,setmsg] = useState<string>("");
+    const [email,setemail] = useState<string>();
+    const [password,setpassword] = useState<string>();
+
+    const handleEmail = (e:React.ChangeEvent<HTMLInputElement>) => {
+        console.log(e.currentTarget.value);
+        setemail(e.currentTarget.value);
+    }
+
+    const handlePassword = (e:React.ChangeEvent<HTMLInputElement>) => {
+        console.log(e.currentTarget.value);
+        setpassword(e.currentTarget.value);
+    }
+
 
     return(
         <div className="d-flex .justify-content-between">
@@ -25,6 +38,7 @@ const Login: React.FC = () => {
                             type="email" 
                             placeholder='email'
                             className="form-control" 
+                            onChange={handleEmail}
                         />
                     </div>
                     <div className="input-group input-group-lg">
@@ -33,6 +47,7 @@ const Login: React.FC = () => {
                             type="password" 
                             placeholder='password'
                             className="form-control"
+                            onChange={handlePassword}
                         />
                     </div>
                     <button type="button" className="btn btn-outline-dark">Login</button>
