@@ -3,6 +3,7 @@ import style from '../../styles/service.module.css'
 import { useState } from "react";
 import { HiChip } from 'react-icons/hi'
 import { MdCreate } from "react-icons/md";
+import Multiselect from "multiselect-react-dropdown";
 
 
 const Service = () => {
@@ -18,9 +19,51 @@ const Service = () => {
         }
     )
 
-    const [serviceName,setServiceName] = useState("");
+    const fieldList:string[] = [
+        "Name",
+        "Region",
+        "Machine Family",
+        "CPUs",
+        "Boot Disk Size",
+        "Boot Disk OS",
+        "Allow Traffic",
+        "Description",
+        "Subnet Name",
+        "Subnet Description",
+        "Subnet Region",
+        "Subnet IP Address Range",
+        "Private or Public",
+        "Firewall Rules Name",
+        "Firewall Rules Type",
+        "Firewall Rules Filter",
+        "Firewall Rules Protocol Port",
+        "Firewall Rules Action",
+        "Bucket Name",
+        "Encryption",
+        "Storage Class",
+        "Cluster Name",
+        "Cluster Type",
+        "Software Component",
+        "Master Node Machine family",
+        "Master Node CPUs",
+        "Master Node Memory",
+        "Master Node Disk Size",
+        "Master Node Disk Type",
+        "Worker Node Machine Family",
+        "Worker Nodes Number",
+        "Worker Node CPUs",
+        "Worker Node Memory",
+        "Worker Node Disk Size",
+        "Worker Node Disk Type",
+        "IAM Username",
+        "IAM Accountname",
+        "IAM Roles"
+    ]
+
+    const [serviceName,setServiceName] = useState<string>("");
+    const [field,setfield] = useState<Array<string>>([]);
     
-    const [subServices,setSubServices] = useState([
+    const [subServices,setSubServices] = useState<Array<{name: string, fields: string[]}>>([
         {
             name: "Virtual Machine",
             fields : ["Name","Region","Machine Family","CPUs","Memory","Boot Disk Size","OS","Allow traffic"]
@@ -36,8 +79,15 @@ const Service = () => {
         setServiceName(e.currentTarget.value);
     }
 
+    const handleCreate = () => {
+        setSubServices([...subServices,{name: serviceName,fields: field}])
+    }
+
     return(
         <div className={style.service}>
+
+            {/* Modal */}
+
             <button 
                 type="button" 
                 className="fw-bolder fs-5 btn btn-primary align-self-end mx-5 my-3" 
@@ -65,23 +115,21 @@ const Service = () => {
                             />
                             <label htmlFor="floatingService">Service Name</label>
                         </div>
-                        <div className="form-floating">
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                id="floatingDesc" 
-                                // onChange={handleDesc}
-                                placeholder="Short Description" 
-                            />
-                            <label htmlFor="floatingDesc">Short Description</label>
-                        </div>
+                        <Multiselect
+                            isObject={false}
+                            onKeyPressFn={function noRefCheck(){}}
+                            onRemove={(e) => {setfield(e); console.log(e);}}
+                            onSearch={function noRefCheck(){}}
+                            onSelect={(e) => {setfield(e); console.log(e);}}
+                            options={fieldList}
+                        />
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button 
                             type="button" 
                             className="btn btn-primary"
-                            // onClick={handleCreate}
+                            onClick={handleCreate}
                             data-bs-dismiss="modal"
                         >
                             Save
@@ -114,7 +162,7 @@ const Service = () => {
                                                 {
                                                     p.fields.map( d => {
                                                         return(
-                                                            <li className="mx-4">{d}</li>
+                                                            <li key={d} className="mx-4">{d}</li>
                                                         );
                                                     })
                                                 }

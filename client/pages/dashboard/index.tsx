@@ -5,6 +5,7 @@ import { FcServices } from 'react-icons/fc'
 import { MdCreate } from 'react-icons/md'
 import { AiFillDelete, AiOutlineDelete } from 'react-icons/ai';
 import { FaEdit } from 'react-icons/fa';
+import Link from 'next/link';
 
 
 interface ServiceData {
@@ -66,7 +67,7 @@ const Dashboard = () => {
     }
 
     const editcard = (cname:string) => {
-        
+
     }
 
     return(
@@ -139,11 +140,13 @@ const Dashboard = () => {
                                         <button className='btn' onClick={() => editcard(p.name)}><FaEdit size={'20'} /></button>
                                         <button className='btn' onClick={() => deleteCard(p.name)}><AiFillDelete size={'25'} /></button>
                                     </div>
-                                    <div className="card-body rounded shadow-lg p-4 d-flex flex-column align-items-center text-center">
-                                        <div className={styles.logo}><FcServices size={'80'}/></div>
-                                        <h5 className="card-title fs-3 mt-4">{p.name}</h5>
-                                        <p className="fw-500 mt-3">{p.desc}</p>
-                                    </div>
+                                    <Link href={`/dashboard/${p.name}`} className='text-decoration-none text-black'>
+                                        <div className="card-body rounded shadow-lg p-4 d-flex flex-column align-items-center text-center">
+                                            <div className={styles.logo}><FcServices size={'80'}/></div>
+                                            <h5 className="card-title fs-3 mt-4">{p.name}</h5>
+                                            <p className="fw-500 mt-3">{p.desc}</p>
+                                        </div>
+                                    </Link>
                                 </div>
                             </div>
                         );
