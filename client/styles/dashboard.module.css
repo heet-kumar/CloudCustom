@@ -1,0 +1,26 @@
+.dashboard{
+    margin: 5% 0 0 15%;
+    /* border: 1px solid red; */
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.dashboard_container{
+    width: 100%;
+    padding: 2%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3%;
+}
+
+.card{
+    width: 30%;
+    margin-bottom: 2%;
+}
+
+.logo{
+    padding: 2%;
+    border: 1px solid #262f3d;
+    border-radius: 10px;
+}

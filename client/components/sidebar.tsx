@@ -1,6 +1,10 @@
+import { useRouter } from 'next/router';
 import styles from '../styles/sidebar.module.css'
 
 const Sidebar = () => {
+
+    const router = useRouter
+
     return(
         <div className={styles.sidebar}>
             <div className={styles.sidebar_container} >
