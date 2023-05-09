@@ -3,6 +3,7 @@ import {RiLockPasswordLine} from 'react-icons/ri'
 import {MdOutlineAlternateEmail} from 'react-icons/md'
 import {AiOutlineUser} from 'react-icons/ai'
 import { useEffect,useState } from 'react';
+import Link from 'next/link';
 
 
 const Create: React.FC = () => {
@@ -87,7 +88,7 @@ const Create: React.FC = () => {
                     </div>
 
                     <button type="button" className="btn btn-outline-dark">SignUp</button>
-                    <a href='/' className="align-self-start btn btn-link link-offset-2 link-underline link-underline-opacity-0" role="button" >Login</a>
+                    <Link href={'/'}><div className="align-self-start btn btn-link link-offset-2 link-underline link-underline-opacity-0" role="button" >Login</div></Link>
                 </div>
             </div>
         </div>

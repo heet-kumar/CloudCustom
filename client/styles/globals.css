@@ -69,3 +69,7 @@ a{
 .borderColor{
   border: 1px solid #262f3d;
 }
+
+.ml-5{
+  margin-left: 15%;
+}
