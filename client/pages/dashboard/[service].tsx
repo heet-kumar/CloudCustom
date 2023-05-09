@@ -4,6 +4,9 @@ import { useState } from "react";
 import { HiChip } from 'react-icons/hi'
 import { MdCreate } from "react-icons/md";
 import Multiselect from "multiselect-react-dropdown";
+import { FaEdit } from "react-icons/fa";
+import { AiFillDelete } from "react-icons/ai";
+import Link from "next/link";
 
 
 const Service = () => {
@@ -83,6 +86,15 @@ const Service = () => {
         setSubServices([...subServices,{name: serviceName,fields: field}])
     }
 
+    const deleteCard = (cname:string) => {
+        const newdata = subServices.filter( p => p.name !== cname);
+        setSubServices(newdata);
+    }
+
+    const editcard = (cname:string) => {
+
+    }
+
     return(
         <div className={style.service}>
 
@@ -153,21 +165,27 @@ const Service = () => {
                     {
                         subServices.map( (p) => {
                             return(
-                                <div className="shadow card w-100 mb-4">
-                                    <div className="card-body d-flex">
-                                        <div className="d-flex align-items-center"><HiChip color={'#dc3545'} size={'50'}/></div>
-                                        <div className="card-body">
-                                            <h5 className="card-title fs-3 mx-4">{p.name}</h5>
-                                            <ul className="d-flex flex-wrap">
-                                                {
-                                                    p.fields.map( d => {
-                                                        return(
-                                                            <li key={d} className="mx-4">{d}</li>
-                                                        );
-                                                    })
-                                                }
-                                            </ul>
+                                <div className="shadow card w-100 mb-4 ">
+                                    <Link href={`/service/${p.name.toLowerCase()}`} className="text-decoration-none text-black">
+                                        <div className="card-body d-flex">
+                                            <div className="d-flex align-items-center"><HiChip color={'#dc3545'} size={'50'}/></div>
+                                            <div className="card-body">
+                                                <h5 className="card-title fs-3 mx-4">{p.name}</h5>
+                                                <ul className="d-flex flex-wrap">
+                                                    {
+                                                        p.fields.map( d => {
+                                                            return(
+                                                                <li key={d} className="mx-4">{d}</li>
+                                                            );
+                                                        })
+                                                    }
+                                                </ul>
+                                            </div>
                                         </div>
+                                    </Link>
+                                    <div className="card-footer d-flex justify-content-end">
+                                            <button className='btn' onClick={() => editcard(p.name)}><FaEdit size={'20'} /></button>
+                                            <button className='btn' onClick={() => deleteCard(p.name)}><AiFillDelete size={'25'} /></button>
                                     </div>
                                 </div>
                             );
