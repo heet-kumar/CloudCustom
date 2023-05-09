@@ -1,6 +1,6 @@
 
 import { useState } from 'react';
-import styles from '../styles/dashboard.module.css' 
+import styles from '../../styles/dashboard.module.css' 
 import { FcServices } from 'react-icons/fc'
 import { MdCreate } from 'react-icons/md'
 
@@ -119,7 +119,7 @@ const Dashboard = () => {
 
             <div className={styles.dashboard_container}>
                 {
-                    data.map((p) => {
+                    data.map((p:ServiceData) => {
                         return(
                             <div key={p.name} className={styles.card}>
                                 <div className="card-body rounded shadow-lg p-4 d-flex flex-column align-items-center text-center">
