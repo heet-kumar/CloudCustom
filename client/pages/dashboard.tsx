@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import styles from '../styles/dashboard.module.css' 
 import { FcServices } from 'react-icons/fc'
+import { MdCreate } from 'react-icons/md'
+
 
 interface ServiceData {
     name: string,
@@ -58,8 +60,17 @@ const Dashboard = () => {
 
     return(
         <div className={styles.dashboard }>
-            <button type="button" className="fw-bolder fs-5 btn btn-primary align-self-end m-4" data-bs-toggle="modal" data-bs-target="#ServiceModal">
-                Create
+            <button 
+                type="button" 
+                className="fw-bolder fs-5 btn btn-primary align-self-end m-4" 
+                data-bs-toggle="modal" 
+                data-bs-target="#ServiceModal"
+                onClick={() => {
+                    setservice("");
+                    setdesc("")
+                }}
+            >
+                <MdCreate /> Create
             </button>
 
             <div className="modal fade" id="ServiceModal" aria-hidden="true">
@@ -71,17 +82,36 @@ const Dashboard = () => {
                     </div>
                     <div className="modal-body">
                         <div className="form-floating mb-3">
-                            <input type="text" className="form-control" id="floatingService" placeholder="Enter Service Name" />
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                id="floatingService" 
+                                onChange={handleService}
+                                placeholder="Enter Service Name" 
+                            />
                             <label htmlFor="floatingService">Service Name</label>
                         </div>
                         <div className="form-floating">
-                            <input type="text" className="form-control" id="floatingDesc" placeholder="Short Description" />
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                id="floatingDesc" 
+                                onChange={handleDesc}
+                                placeholder="Short Description" 
+                            />
                             <label htmlFor="floatingDesc">Short Description</label>
                         </div>
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" className="btn btn-primary">Save changes</button>
+                        <button 
+                            type="button" 
+                            className="btn btn-primary"
+                            onClick={handleCreate}
+                            data-bs-dismiss="modal"
+                        >
+                            Save
+                        </button>
                     </div>
                     </div>
                 </div>
