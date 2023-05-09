@@ -3,6 +3,8 @@ import { useState } from 'react';
 import styles from '../../styles/dashboard.module.css' 
 import { FcServices } from 'react-icons/fc'
 import { MdCreate } from 'react-icons/md'
+import { AiFillDelete, AiOutlineDelete } from 'react-icons/ai';
+import { FaEdit } from 'react-icons/fa';
 
 
 interface ServiceData {
@@ -58,8 +60,20 @@ const Dashboard = () => {
         }])
     }
 
+    const deleteCard = (cname:string) => {
+        const newdata = data.filter( p => p.name !== cname);
+        setdata(newdata);
+    }
+
+    const editcard = (cname:string) => {
+        
+    }
+
     return(
         <div className={styles.dashboard }>
+
+            {/* Modal Code */}
+
             <button 
                 type="button" 
                 className="fw-bolder fs-5 btn btn-primary align-self-end mx-5 my-3" 
@@ -120,10 +134,16 @@ const Dashboard = () => {
                     data.map((p:ServiceData) => {
                         return(
                             <div key={p.name} className={styles.card}>
-                                <div className="card-body rounded shadow-lg p-4 d-flex flex-column align-items-center text-center">
-                                    <div className={styles.logo}><FcServices size={'80'}/></div>
-                                    <h5 className="card-title fs-3 mt-4">{p.name}</h5>
-                                    <p className="fw-500 mt-3">{p.desc}</p>
+                                <div className='card'>
+                                    <div className="card-header d-flex justify-content-between">
+                                        <button className='btn' onClick={() => editcard(p.name)}><FaEdit size={'20'} /></button>
+                                        <button className='btn' onClick={() => deleteCard(p.name)}><AiFillDelete size={'25'} /></button>
+                                    </div>
+                                    <div className="card-body rounded shadow-lg p-4 d-flex flex-column align-items-center text-center">
+                                        <div className={styles.logo}><FcServices size={'80'}/></div>
+                                        <h5 className="card-title fs-3 mt-4">{p.name}</h5>
+                                        <p className="fw-500 mt-3">{p.desc}</p>
+                                    </div>
                                 </div>
                             </div>
                         );
