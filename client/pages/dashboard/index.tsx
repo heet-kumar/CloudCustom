@@ -62,13 +62,9 @@ const Dashboard = () => {
         <div className={styles.dashboard }>
             <button 
                 type="button" 
-                className="fw-bolder fs-5 btn btn-primary align-self-end m-4" 
+                className="fw-bolder fs-5 btn btn-primary align-self-end mx-5 my-3" 
                 data-bs-toggle="modal" 
                 data-bs-target="#ServiceModal"
-                onClick={() => {
-                    setservice("");
-                    setdesc("")
-                }}
             >
                 <MdCreate /> Create
             </button>
@@ -116,6 +112,8 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Basic container */}
 
             <div className={styles.dashboard_container}>
                 {
