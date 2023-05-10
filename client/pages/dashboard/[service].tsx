@@ -165,7 +165,7 @@ const Service = () => {
                     {
                         subServices.map( (p) => {
                             return(
-                                <div className="shadow card w-100 mb-4 ">
+                                <div key={p.name} className="shadow card w-100 mb-4 ">
                                     <Link href={`/service/${p.name.toLowerCase()}`} className="text-decoration-none text-black">
                                         <div className="card-body d-flex">
                                             <div className="d-flex align-items-center"><HiChip color={'#dc3545'} size={'50'}/></div>
