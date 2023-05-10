@@ -19,7 +19,7 @@ const Dashboard = () => {
 
     const [service,setservice] = useState<string>("");
     const [desc,setdesc] = useState<string>("");
-    const [state,setState] = useState<string>("");
+    const [state,setState] = useState<boolean>(true);
 
     const handleService = (e:React.ChangeEvent<HTMLInputElement>) => {
         setservice(e.currentTarget.value);
@@ -65,6 +65,7 @@ const Dashboard = () => {
 
     useEffect( () => {
         const getData = async() => {
+            console.log("Inside UseEffect");
             const result = await axios.get("http://localhost:5000/services/all");
             console.log(result.data.msg)
             setdata(result.data.msg)
@@ -73,20 +74,31 @@ const Dashboard = () => {
     },[state])
 
     const handleCreate = async () => {
-        const result = await axios.post("http://localhost:5000/services/create",{name:service,desc:desc})
-        console.log(result)
-        setState(result.data.msg);
+        await axios.post("http://localhost:5000/services/create",{
+            name:service,
+            desc:desc
+        }).then( async(res) => {
+            console.log(res);
+            setState(!state);
+        })
+        .catch( err => {
+            console.log(err);
+        })
         
-        // setdata([...data,{
-        //     sid: 14,
-        //     name: service,
-        //     desc: desc
-        // }])
     }
 
-    const deleteCard = (cname:string) => {
-        const newdata = data.filter( p => p.name !== cname);
-        setdata(newdata);
+    const deleteCard = async(id:number) => {
+        // const newdata = data.filter( p => p.name !== cname);
+        // setdata(newdata);
+        await axios.post("http://localhost:5000/services/delete",{
+            id
+        }).then( async(res) => {
+            console.log(res);
+            setState(!state);
+        })
+        .catch( err => {
+            console.log(err)
+        })
     }
 
     const editcard = (cname:string) => {
@@ -161,7 +173,7 @@ const Dashboard = () => {
                                 <div className='card'>
                                     <div className="card-header d-flex justify-content-between">
                                         <button className='btn' onClick={() => editcard(p.name)}><FaEdit size={'20'} /></button>
-                                        <button className='btn' onClick={() => deleteCard(p.name)}><AiFillDelete size={'25'} /></button>
+                                        <button className='btn' onClick={() => deleteCard(p.sid)}><AiFillDelete size={'25'} /></button>
                                     </div>
                                     <Link href={`/dashboard/${p.name.toLowerCase()}`} className='text-decoration-none text-black'>
                                         <div className="card-body rounded shadow-lg p-4 d-flex flex-column align-items-center text-center">

@@ -1,12 +1,13 @@
 import { useRouter } from "next/router";
 import style from '../../styles/service.module.css'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiChip } from 'react-icons/hi'
 import { MdCreate } from "react-icons/md";
 import Multiselect from "multiselect-react-dropdown";
 import { FaEdit } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
 import Link from "next/link";
+import axios from "axios";
 
 
 const Service = () => {
@@ -21,6 +22,14 @@ const Service = () => {
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         }
     )
+
+    useEffect(() => {
+        const getData = async() => {
+            const service = await axios.get("http://localhost:5000/services/name",{name: root.service})
+            console.log(service.data);
+        }
+        getData();
+    },[root])
 
     const fieldList:string[] = [
         "Name",
