@@ -38,6 +38,18 @@ def all_services():
     print(result)
     return result
 
+def name_service(name):
+    str_service = "SELECT * FROM services WHERE name='"+name+"';"
+    cur.execute(str_service)
+    rows = cur.fetchall()
+    data = {
+        "sid": rows[0][0],
+        "name": rows[0][1],
+        "desc": rows[0][2]
+    }
+    print(rows)
+    return data
+
 def close():
     cur.close()
     conn.close()

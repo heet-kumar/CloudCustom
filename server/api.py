@@ -69,7 +69,11 @@ def all_resources():
     print(response)
     return jsonify({"msg": response}), 200
 
-
+@app.route('/services/name', methods=['GET'])
+def get_by_name():
+    data = request.json
+    response = solution.name_service(data['name'])
+    return jsonify([response]), 200
 
 
 if __name__ == '__main__':
