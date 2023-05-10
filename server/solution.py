@@ -1,4 +1,5 @@
 import psycopg2
+import json
 
 conn = psycopg2.connect(
     database="postgres",
@@ -10,21 +11,33 @@ conn = psycopg2.connect(
 
 cur = conn.cursor()
 
-def create_services():
-    str_service = "INSERT INTO services(name,dsc) VALUES('big query','Big Query is used to handle the larbge data like pdf,image,text,etc.');"
+def create_services(servicename,servicedesc):
+    str_service = "INSERT INTO services(name,dsc) VALUES('"+servicename+"','"+servicedesc+"');"
+    print(str_service)
     cur.execute(str_service)
     conn.commit()
+    return "Resource Created Successfully"
 
-def delete_services():
-    str_service = "DELETE from services where name='big query';"
+def delete_services(name):
+    str_service = "DELETE from services where name='"+name+"';"
     cur.execute(str_service)
     conn.commit()
+    return "Resource deleted Successfully"
 
+def all_services():
+    str_services = "SELECT * FROM services;"
+    cur.execute(str_services)
+    rows = cur.fetchall()
+    result = []
+    for row in rows:
+        result.append({
+            "sid": row[0],
+            "name": row[1],
+            "desc": row[2]
+        })
+    print(result)
+    return result
 
-
-if __name__ == '__main__':
-
-    create_services()
-
+def close():
     cur.close()
     conn.close()

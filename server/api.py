@@ -11,39 +11,39 @@ CORS(app)
 def index():
     return 'Hello, world!'
 
-@app.route('/api/query', methods=['GET','POST'])
-def data():
-    data = request.json
-    print(data)
-    final_data = solution.question_answer(data["query"], data["fname"])  # calling user-build function
-    return jsonify({"msg": [final_data]}), 200
-
-@app.route('/api/summary', methods=['GET','POST'])
-def summary():
-    data = request.json
-    print(data)
-    fdata = solution.summery(data["fname"])     # calling user-build function
-    return jsonify({"msg": fdata}), 200
-
-@app.route('/upload', methods=['POST'])
-def upload():
-    if request.method == 'POST':
-        if 'file' not in request.files:
-            return jsonify({'error': 'no file'}), 400
-        file = request.files['file']
-        print(file)
-        if file.filename == '':
-            return jsonify({'error': 'no file name'}), 400
-        if file:
-            try:
-                filename = file.filename
-                file.save(os.path.join('/home/heekumar/PycharmProjects/Openai', filename))
-                solution.open_file(filename)  # calling user-build function
-                return jsonify({'success': 'file uploaded'}), 200
-            except Exception as e:
-                return jsonify({"msg": "Unsupported File entered"}), 401
-        else:
-            return jsonify({'error': 'file not allowed'}), 400
+# @app.route('/api/query', methods=['GET','POST'])
+# def data():
+#     data = request.json
+#     print(data)
+#     final_data = solution.question_answer(data["query"], data["fname"])  # calling user-build function
+#     return jsonify({"msg": [final_data]}), 200
+#
+# @app.route('/api/summary', methods=['GET','POST'])
+# def summary():
+#     data = request.json
+#     print(data)
+#     fdata = solution.summery(data["fname"])     # calling user-build function
+#     return jsonify({"msg": fdata}), 200
+#
+# @app.route('/upload', methods=['POST'])
+# def upload():
+#     if request.method == 'POST':
+#         if 'file' not in request.files:
+#             return jsonify({'error': 'no file'}), 400
+#         file = request.files['file']
+#         print(file)
+#         if file.filename == '':
+#             return jsonify({'error': 'no file name'}), 400
+#         if file:
+#             try:
+#                 filename = file.filename
+#                 file.save(os.path.join('/home/heekumar/PycharmProjects/Openai', filename))
+#                 solution.open_file(filename)  # calling user-build function
+#                 return jsonify({'success': 'file uploaded'}), 200
+#             except Exception as e:
+#                 return jsonify({"msg": "Unsupported File entered"}), 401
+#         else:
+#             return jsonify({'error': 'file not allowed'}), 400
 
 
 # Create Resource API
@@ -51,6 +51,24 @@ def upload():
 def create_service():
     data = request.json
     print(data)
+    response = solution.create_services(data["name"], data["desc"])
+    return jsonify({"msg":response}), 200
+
+# Delete Resource API
+@app.route('/services/delete', methods=['DELETE','POST'])
+def delete_service():
+    data = request.json
+    print(data)
+    response = solution.delete_services(data["name"])
+    return jsonify({"msg": response}), 200
+
+# All Resources API
+@app.route('/services/all', methods=['GET'])
+def all_resources():
+    response = solution.all_services()
+    print(response)
+    return jsonify({"msg": response}), 200
+
 
 
 
