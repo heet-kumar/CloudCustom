@@ -18,8 +18,9 @@ def create_services(servicename,servicedesc):
     conn.commit()
     return "Resource Created Successfully"
 
-def delete_services(name):
-    str_service = "DELETE from services where name='"+name+"';"
+def delete_services(id):
+    str_service = "DELETE from services where sid="+str(id)+";"
+    print(str_service)
     cur.execute(str_service)
     conn.commit()
     return "Resource deleted Successfully"
@@ -49,6 +50,46 @@ def name_service(name):
     }
     print(rows)
     return data
+
+
+def all_subservices():
+    str_services = "SELECT * FROM subservices;"
+    cur.execute(str_services)
+    rows = cur.fetchall()
+    result = []
+    for row in rows:
+        result.append({
+            "ssid": row[0],
+            "sid": row[1],
+            "name": row[2],
+            "desc": row[3],
+            "columns": row[4]
+        })
+    print(result)
+    return result
+
+def create_subservices(sid,name,desc,columns):
+    str_service = "INSERT INTO services(sid,name,dsc,columns) VALUES('" + sid + "','" + name +"','" + desc + "','"+ columns +"');"
+    print(str_service)
+    cur.execute(str_service)
+    conn.commit()
+    return "Resource Created Successfully"
+
+def delete_subservices(id):
+    str_service = "DELETE from services where ssid=" + str(id) + ";"
+    print(str_service)
+    cur.execute(str_service)
+    conn.commit()
+    return "Subservice deleted Successfully"
+
+def delete_subservice_sid(id):
+    str_service = "DELETE from services where sid=" + str(id) + ";"
+    print(str_service)
+    cur.execute(str_service)
+    conn.commit()
+    return "Service deleted Successfully from Subservices"
+
+
 
 def close():
     cur.close()

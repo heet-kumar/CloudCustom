@@ -59,7 +59,7 @@ def create_service():
 def delete_service():
     data = request.json
     print(data)
-    response = solution.delete_services(data["name"])
+    response = solution.delete_services(data["id"])
     return jsonify({"msg": response}), 200
 
 # All Resources API
@@ -73,7 +73,7 @@ def all_resources():
 def get_by_name():
     data = request.json
     response = solution.name_service(data['name'])
-    return jsonify([response]), 200
+    return jsonify(response), 200
 
 
 if __name__ == '__main__':
