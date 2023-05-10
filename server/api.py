@@ -73,9 +73,10 @@ def all_resources():
     return jsonify({"msg": response}), 200
 
 # Get Service By Name
-@app.route('/services/name', methods=['GET'])
+@app.route('/services/name', methods=['POST'])
 def get_by_name():
     data = request.json
+    print(data)
     response = solution.name_service(data['name'])
     return jsonify(response), 200
 

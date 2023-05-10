@@ -75,7 +75,7 @@ const Dashboard = () => {
 
     const handleCreate = async () => {
         await axios.post("http://localhost:5000/services/create",{
-            name:service,
+            name:service.toLowerCase(),
             desc:desc
         }).then( async(res) => {
             console.log(res);
@@ -178,7 +178,7 @@ const Dashboard = () => {
                                     <Link href={`/dashboard/${p.name.toLowerCase()}`} className='text-decoration-none text-black'>
                                         <div className="card-body rounded shadow-lg p-4 d-flex flex-column align-items-center text-center">
                                             <div className={styles.logo}><FcServices size={'80'}/></div>
-                                            <h5 className="card-title fs-3 mt-4">{p.name}</h5>
+                                            <h5 className="card-title fs-3 mt-4 text-capitalize">{p.name}</h5>
                                             <p className="fw-500 mt-3">{p.desc}</p>
                                         </div>
                                     </Link>

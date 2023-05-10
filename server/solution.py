@@ -43,13 +43,15 @@ def name_service(name):
     str_service = "SELECT * FROM services WHERE name='"+name+"';"
     cur.execute(str_service)
     rows = cur.fetchall()
-    data = {
-        "sid": rows[0][0],
-        "name": rows[0][1],
-        "desc": rows[0][2]
-    }
-    print(rows)
-    return data
+    result = []
+    for row in rows:
+        result.append({
+            "sid": row[0],
+            "name": row[1],
+            "desc": row[2]
+        })
+    print(result)
+    return result
 
 
 def all_subservices():

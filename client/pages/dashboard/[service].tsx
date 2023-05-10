@@ -14,22 +14,27 @@ const Service = () => {
 
     const route = useRouter();
     const root = route.query;
-    console.log("Root : ",root.service);
+    // console.log("Root : ",root.service);
 
     const [serviceData,setServiceData] = useState(
         {
-            "name": "Compute Service",
+            "name": "Pub/Sub",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         }
     )
 
     useEffect(() => {
+        console.log("route -> : ",root)
         const getData = async() => {
-            const service = await axios.get("http://localhost:5000/services/name",{name: root.service})
-            console.log(service.data);
+            await axios.post("http://localhost:5000/services/name",{name: root.service})
+            .then( async(res) => {
+                console.log("Testing : ",res);
+                if(res.data.length!==0) setServiceData(res.data[0])
+            })
+            .catch( err => console.log(err))  
         }
-        getData();
-    },[root])
+        if(root.service!==undefined) getData();
+    },[root.service])
 
     const fieldList:string[] = [
         "Name",
@@ -165,8 +170,8 @@ const Service = () => {
             <div className={style.service_container}>
                 <div className="shadow card w-100 mb-3">
                     <div className="card-body">
-                        <h3 className="text-light-emphasis card-title fs-1 fw-bolder mb-3">{root.service}</h3>
-                        <p className="card-text fs-5 fw-500">{serviceData.desc}</p>
+                        <h3 className="text-capitalize text-light-emphasis card-title fs-1 fw-bolder mb-3">{root.service}</h3>
+                        <p className="card-text fs-5 fw-500">{serviceData?.desc}</p>
                     </div>
                 </div>
 
@@ -179,7 +184,7 @@ const Service = () => {
                                         <div className="card-body d-flex">
                                             <div className="d-flex align-items-center"><HiChip color={'#dc3545'} size={'50'}/></div>
                                             <div className="card-body">
-                                                <h5 className="card-title fs-3 mx-4">{p.name}</h5>
+                                                <h5 className="card-title fs-3 mx-4 text-capatalize">{p.name}</h5>
                                                 <ul className="d-flex flex-wrap">
                                                     {
                                                         p.fields.map( d => {
