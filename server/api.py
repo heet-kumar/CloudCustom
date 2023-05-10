@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request
-from flask_cors import CORS
+from flask_cors import CORS,cross_origin
 import solution
-import os
 
 app = Flask(__name__)
 
@@ -45,16 +44,20 @@ def index():
 #         else:
 #             return jsonify({'error': 'file not allowed'}), 400
 
+'''
+    Service API
+'''
 
-# Create Resource API
-@app.route('/services/create', methods=['POST'])
+# Create Service API
+@app.route('/services/create', methods=['POST'],strict_slashes=False)
+@cross_origin()
 def create_service():
     data = request.json
     print(data)
     response = solution.create_services(data["name"], data["desc"])
     return jsonify({"msg":response}), 200
 
-# Delete Resource API
+# Delete Service API
 @app.route('/services/delete', methods=['DELETE','POST'])
 def delete_service():
     data = request.json
@@ -62,13 +65,14 @@ def delete_service():
     response = solution.delete_services(data["id"])
     return jsonify({"msg": response}), 200
 
-# All Resources API
+# All Service API
 @app.route('/services/all', methods=['GET'])
 def all_resources():
     response = solution.all_services()
     print(response)
     return jsonify({"msg": response}), 200
 
+# Get Service By Name
 @app.route('/services/name', methods=['GET'])
 def get_by_name():
     data = request.json
