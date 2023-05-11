@@ -131,12 +131,7 @@ const Service = () => {
 
     const handleCreate = async() => {
         // setSubServices([...subServices,{name: serviceName,desc:desc,fields: field}])
-        console.log("data : ",{
-            sid: serviceData.sid,
-            name: serviceName,
-            desc: desc,
-            columns: JSON.stringify(field)
-        });
+        
         await axios.post("http://localhost:5000/subservices/create",{
             sid: serviceData.sid,
             name: serviceName,
@@ -151,9 +146,20 @@ const Service = () => {
         })
     }
 
-    const deleteCard = (cname:string) => {
-        const newdata = subServices.filter( p => p.name !== cname);
-        setSubServices(newdata);
+    const deleteCard = async(id:number) => {
+        // const newdata = subServices.filter( p => p.name !== cname);
+        // setSubServices(newdata);
+
+        await axios.post("http://localhost:5000/subservices/delete",{
+            id
+        }).then( async(res) => {
+            console.log(res);
+            setState(!state);
+        })
+        .catch( err => {
+            console.log(err);
+        })
+
     }
 
     const editcard = (cname:string) => {
@@ -260,8 +266,8 @@ const Service = () => {
                                         </div>
                                     </Link>
                                     <div className="card-footer d-flex justify-content-end">
-                                            <button className='btn' onClick={() => editcard(p.name)}><FaEdit size={'20'} /></button>
-                                            <button className='btn' onClick={() => deleteCard(p.name)}><AiFillDelete size={'25'} /></button>
+                                        <button className='btn' onClick={() => editcard(p.name)}><FaEdit size={'20'} /></button>
+                                        <button className='btn' onClick={() => deleteCard(p.ssid)}><AiFillDelete size={'25'} /></button>
                                     </div>
                                 </div>
                             );

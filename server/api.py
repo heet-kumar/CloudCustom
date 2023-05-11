@@ -128,6 +128,9 @@ def delete_service():
         print(str_service)
         cur.execute(str_service)
         conn.commit()
+        str_service = "DELETE from subservices where sid=" + str(data['id']) + ";"
+        cur.execute(str_service)
+        conn.commit()
         return jsonify({"msg": "User Deleted Successfully"}), 200
 
     except IntegrityError as e:
@@ -205,6 +208,7 @@ def get_by_name_service():
     Sub-Services API
 '''
 
+# Get All Sub Service
 @app.route('/subservices/all', methods=['GET','POST'])
 def all_subservice():
     try:
@@ -235,6 +239,7 @@ def all_subservice():
         conn.rollback()
         return jsonify({"msg": error_message}), 500
 
+# Create Sub service
 @app.route('/subservices/create', methods=['POST'],strict_slashes=False)
 @cross_origin()
 def create_subservice():
@@ -254,6 +259,31 @@ def create_subservice():
         conn.rollback()
         t = error_message.find("DETAIL")
         return jsonify({"msg": error_message[t:]}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
+
+
+# Delete Sub Service
+@app.route('/subservices/delete', methods=['DELETE','POST'])
+def delete_subservice():
+    try:
+        data = request.json
+        print(data)
+        cur = conn.cursor()
+        str_service = "DELETE from subservices where ssid=" + str(data['id']) + ";"
+        print(str_service)
+        cur.execute(str_service)
+        conn.commit()
+        return jsonify({"msg": "User Deleted Successfully"}), 200
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        print("Check position : ",error_message)
+        return jsonify({"msg": error_message}), 406
 
     except Exception as e:
         error_message = f"Error: {e}"
