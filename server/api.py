@@ -24,40 +24,6 @@ conn = psycopg2.connect(
 def index():
     return 'Hello, world!'
 
-# @app.route('/api/query', methods=['GET','POST'])
-# def data():
-#     data = request.json
-#     print(data)
-#     final_data = solution.question_answer(data["query"], data["fname"])  # calling user-build function
-#     return jsonify({"msg": [final_data]}), 200
-#
-# @app.route('/api/summary', methods=['GET','POST'])
-# def summary():
-#     data = request.json
-#     print(data)
-#     fdata = solution.summery(data["fname"])     # calling user-build function
-#     return jsonify({"msg": fdata}), 200
-#
-# @app.route('/upload', methods=['POST'])
-# def upload():
-#     if request.method == 'POST':
-#         if 'file' not in request.files:
-#             return jsonify({'error': 'no file'}), 400
-#         file = request.files['file']
-#         print(file)
-#         if file.filename == '':
-#             return jsonify({'error': 'no file name'}), 400
-#         if file:
-#             try:
-#                 filename = file.filename
-#                 file.save(os.path.join('/home/heekumar/PycharmProjects/Openai', filename))
-#                 solution.open_file(filename)  # calling user-build function
-#                 return jsonify({'success': 'file uploaded'}), 200
-#             except Exception as e:
-#                 return jsonify({"msg": "Unsupported File entered"}), 401
-#         else:
-#             return jsonify({'error': 'file not allowed'}), 400
-
 '''
     Signup API
 '''
@@ -88,6 +54,9 @@ def create_user():
         conn.rollback()
         return jsonify({"msg": error_message}), 500
 
+'''
+    Login API
+'''
 
 @app.route('/login', methods=['GET','POST'], strict_slashes=False)
 @cross_origin()
@@ -126,33 +95,111 @@ def login_user():
 @app.route('/services/create', methods=['POST'],strict_slashes=False)
 @cross_origin()
 def create_service():
-    data = request.json
-    print(data)
-    response = solution.create_services(data["name"], data["desc"])
-    return jsonify({"msg":response}), 200
+    try:
+        data = request.json
+        print(data)
+        cur = conn.cursor()
+        str_service = "INSERT INTO services(name,dsc) VALUES('" + data['name'] + "','" + data['desc'] + "');"
+        print(str_service)
+        cur.execute(str_service)
+        conn.commit()
+        cur.close()
+        return jsonify({"msg": "Success"}), 201
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        t = error_message.find("DETAIL")
+        return jsonify({"msg": error_message[t:]}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
 
 # Delete Service API
 @app.route('/services/delete', methods=['DELETE','POST'])
 def delete_service():
-    data = request.json
-    print(data)
-    response = solution.delete_services(data["id"])
-    return jsonify({"msg": response}), 200
+    try:
+        data = request.json
+        print(data)
+        cur = conn.cursor()
+        str_service = "DELETE from services where sid=" + str(data['id']) + ";"
+        print(str_service)
+        cur.execute(str_service)
+        conn.commit()
+        return jsonify({"msg": "User Deleted Successfully"}), 200
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        print("Check position : ",error_message)
+        return jsonify({"msg": error_message}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
 
 # All Service API
 @app.route('/services/all', methods=['GET'])
 def all_resources():
-    response = solution.all_services()
-    print(response)
-    return jsonify({"msg": response}), 200
+    try:
+        cur = conn.cursor()
+        str_services = "SELECT * FROM services;"
+        cur.execute(str_services)
+        rows = cur.fetchall()
+        result = []
+        for row in rows:
+            result.append({
+                "sid": row[0],
+                "name": row[1],
+                "desc": row[2]
+            })
+        print(result)
+        return jsonify({"msg": result}), 200
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        print("Check position : ",error_message)
+        return jsonify({"msg": error_message}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
 
 # Get Service By Name
 @app.route('/services/name', methods=['POST'])
 def get_by_name():
-    data = request.json
-    print(data)
-    response = solution.name_service(data['name'])
-    return jsonify(response), 200
+    try:
+        data = request.json
+        print(data)
+        cur = conn.cursor()
+        str_service = "SELECT * FROM services WHERE name='" + data['name'] + "';"
+        cur.execute(str_service)
+        rows = cur.fetchall()
+        result = []
+        for row in rows:
+            result.append({
+                "sid": row[0],
+                "name": row[1],
+                "desc": row[2]
+            })
+        print(result)
+        return jsonify(result), 200
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        print("Check position : ",error_message)
+        return jsonify({"msg": error_message}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
 
 
 if __name__ == '__main__':
