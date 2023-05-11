@@ -116,7 +116,7 @@ const Dashboard = () => {
                 data-bs-toggle="modal" 
                 data-bs-target="#ServiceModal"
             >
-                <MdCreate /> Create
+                <MdCreate /> Create Service
             </button>
 
             <div className="modal fade" id="ServiceModal" aria-hidden="true">
