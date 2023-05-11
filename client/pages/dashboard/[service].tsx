@@ -18,6 +18,7 @@ const Service = () => {
 
     const [serviceData,setServiceData] = useState(
         {
+            "sid": 2,
             "name": "Pub/Sub",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         }
@@ -82,27 +83,72 @@ const Service = () => {
         "IAM Roles"
     ]
 
+    const [state,setState] = useState<boolean>(true)
+
     const [serviceName,setServiceName] = useState<string>("");
+    const [desc,setdesc] = useState<string>("");
     const [field,setfield] = useState<Array<string>>([]);
     
-    const [subServices,setSubServices] = useState<Array<{name: string, fields: string[]}>>([
+    const [subServices,setSubServices] = useState<Array<{ssid:number,sid:number,name: string, desc:string, columns: string}>>([
         {
+            ssid: 100,
+            sid: 30,
             name: "Virtual Machine",
-            fields : ["Name","Region","Machine Family","CPUs","Memory","Boot Disk Size","OS","Allow traffic"]
+            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            columns : '["Name","Region","Machine Family","CPUs","Memory","Boot Disk Size","OS","Allow traffic"]'
         },
         {
+            ssid: 101,
+            sid: 30,
             name: "Kubernate Engine",
-            fields : ["Name","Region","Machine Family","CPUs","Memory","Boot Disk Size","OS","Allow traffic"]
+            desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            columns : '["Name","Region","Machine Family","CPUs","Memory","Boot Disk Size","OS","Allow traffic"]'
         },
     ])
 
+    useEffect(() => {
+        const getData = async() => {
+            console.log("Inside UseEffect");
+            await axios.get("http://localhost:5000/subservices/all")
+            .then( res => {
+                console.log(res.data.msg);
+                setSubServices(res.data.msg);
+            })
+            .catch( err => console.log(err))
+        }
+        getData();
+    },[state])
+
     const handleServiceName = (e:React.ChangeEvent<HTMLInputElement>) => {
-        console.log(e.currentTarget.value);
-        setServiceName(e.currentTarget.value);
+        console.log(e.currentTarget.value.toLowerCase());
+        setServiceName(e.currentTarget.value.toLowerCase());
     }
 
-    const handleCreate = () => {
-        setSubServices([...subServices,{name: serviceName,fields: field}])
+    const handleDescName = (e:React.ChangeEvent<HTMLInputElement>) => {
+        console.log(e.currentTarget.value);
+        setdesc(e.currentTarget.value);
+    }
+
+    const handleCreate = async() => {
+        // setSubServices([...subServices,{name: serviceName,desc:desc,fields: field}])
+        console.log("data : ",{
+            sid: serviceData.sid,
+            name: serviceName,
+            desc: desc,
+            columns: JSON.stringify(field)
+        });
+        await axios.post("http://localhost:5000/subservices/create",{
+            sid: serviceData.sid,
+            name: serviceName,
+            desc: desc,
+            columns: JSON.stringify(field)
+        }).then( async(res) => {
+            console.log(res);
+            setState(!state);
+        })
+        .catch( err => {
+            console.log(err);
+        })
     }
 
     const deleteCard = (cname:string) => {
@@ -146,12 +192,22 @@ const Service = () => {
                             />
                             <label htmlFor="floatingService">Service Name</label>
                         </div>
+                        <div className="form-floating mb-3">
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                id="floatingService" 
+                                onChange={handleDescName}
+                                placeholder="Enter Service Name" 
+                            />
+                            <label htmlFor="floatingService">Description</label>
+                        </div>
                         <Multiselect
                             isObject={false}
                             onKeyPressFn={function noRefCheck(){}}
                             onRemove={(e) => {setfield(e); console.log(e);}}
                             onSearch={function noRefCheck(){}}
-                            onSelect={(e) => {setfield(e); console.log(e);}}
+                            onSelect={(e) => {setfield(e); console.log("Testing : ",e); console.log("JSON STRING : ",JSON.stringify(e));}}
                             options={fieldList}
                         />
                     </div>
@@ -183,6 +239,7 @@ const Service = () => {
                 <div className="w-100 p-4 mt-4 shadow rounded border">
                     {
                         subServices.map( (p) => {
+                            if(p.sid===serviceData.sid)
                             return(
                                 <div key={p.name} className="shadow card w-100 mb-4 ">
                                     <Link href={`/service/${p.name.toLowerCase()}`} className="text-decoration-none text-black">
@@ -192,7 +249,7 @@ const Service = () => {
                                                 <h5 className="card-title fs-3 mx-4 text-capatalize">{p.name}</h5>
                                                 <ul className="d-flex flex-wrap">
                                                     {
-                                                        p.fields.map( d => {
+                                                        JSON.parse(p.columns).map( (d:string) => {
                                                             return(
                                                                 <li key={d} className="mx-4">{d}</li>
                                                             );

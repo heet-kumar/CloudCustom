@@ -205,7 +205,7 @@ def get_by_name_service():
     Sub-Services API
 '''
 
-@app.route('/subservices/all', methods=['GET'])
+@app.route('/subservices/all', methods=['GET','POST'])
 def all_subservice():
     try:
         cur = conn.cursor()
@@ -235,7 +235,30 @@ def all_subservice():
         conn.rollback()
         return jsonify({"msg": error_message}), 500
 
+@app.route('/subservices/create', methods=['POST'],strict_slashes=False)
+@cross_origin()
+def create_subservice():
+    try:
+        data = request.json
+        print(data)
+        cur = conn.cursor()
+        str_service = "INSERT INTO subservices(sid,name,dsc,columns) VALUES(" + str(data['sid']) + ",'" + data['name'] + "','" + data['desc'] + "','" + data['columns'] + "');"
+        print(str_service)
+        cur.execute(str_service)
+        conn.commit()
+        cur.close()
+        return jsonify({"msg": "Success"}), 201
 
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        t = error_message.find("DETAIL")
+        return jsonify({"msg": error_message[t:]}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
