@@ -14,12 +14,13 @@ const SubService = () => {
 
     const route = useRouter();
     const root = route.query;
-    // console.log("Root : ",root.service);
+    console.log("Root : ",root.subservice);
 
     const [subServiceData,setSubServiceData] = useState(
         {
             "name": "Pub/Sub",
-            "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
+            "desc": "XYZ Ipsum is simply dummy text of the printing and typesetting industry.",
+            "columns": ["Name","Region","Machine Family","CPUs","Memory","Boot Disk Size","Boot Disk OS","Allow traffic"]
         }
     )
 
@@ -28,14 +29,26 @@ const SubService = () => {
     const [resourceName,setResourceName] = useState<string>("");
     const [field,setfield] = useState<Array<string>>([]);
     
-    const [resource,setResource] = useState<Array<{name: string, fields: string[]}>>([
+    const [resource,setResource] = useState<Array<object>>([
         {
-            name: "Kubernate Engine 1",
-            fields : ["Name","Region","Machine Family","CPUs","Memory","Boot Disk Size","OS","Allow traffic"]
+            'Name': 'Kubernate Engine 1',
+            'Region': "asia-east-1",
+            'Machine Family': 'General Purpose',
+            'CPUs' : '4',
+            'Memory': '64',
+            'Boot Disk Size': '10',
+            'Boot Disk OS': 'Linux',
+            'Allow Traffic': 'http'
         },
         {
-            name: "Kubernate Engine 2",
-            fields : ["Name","Region","Machine Family","CPUs","Memory","Boot Disk Size","OS","Allow traffic"]
+            'Name': 'Kubernate Engine 2',
+            'Region': "asia-south-1-b",
+            'Machine Family': 'Compute Purpose',
+            'CPUs' : '4',
+            'Memory': '32',
+            'Boot Disk Size': '10',
+            'Boot Disk OS': 'Ubantu',
+            'Allow Traffic': 'https'
         },
     ])
 
@@ -51,7 +64,7 @@ const SubService = () => {
                 data-bs-toggle="modal" 
                 data-bs-target="#SubServiceModal"
             >
-                <MdCreate /> Create
+                <MdCreate /> Create Resource
             </button>
 
             <div className="modal fade" id="SubServiceModal" aria-hidden="true">
@@ -95,38 +108,54 @@ const SubService = () => {
                     <div className="card-body">
                         <h3 className="text-capitalize text-light-emphasis card-title fs-1 fw-bolder mb-3">{root.subservice}</h3>
                         <p className="card-text fs-5 fw-500">{subServiceData?.desc}</p>
+                        <ul className="d-flex flex-wrap">
+                        {
+                            subServiceData.columns.map( d => {
+                                return(
+                                    <li key={d} className="mx-4">{d}</li>
+                                );
+                            })
+                        }
+                        </ul>
                     </div>
                 </div>
 
-                <div className="w-100 p-4 mt-4 shadow rounded border">
+                <div className="w-100 p-4 mt-4 shadow rounded border"> 
                     {
-                        resource.map( (p) => {
-                            return(
-                                <div key={p.name} className="shadow card w-100 mb-4 ">
-                                    <Link href={`/service/${p.name.toLowerCase()}`} className="text-decoration-none text-black">
-                                        <div className="card-body d-flex">
-                                            <div className="d-flex align-items-center"><HiChip color={'#dc3545'} size={'50'}/></div>
-                                            <div className="card-body">
-                                                <h5 className="card-title fs-3 mx-4 text-capatalize">{p.name}</h5>
-                                                <ul className="d-flex flex-wrap">
-                                                    {
-                                                        p.fields.map( d => {
-                                                            return(
-                                                                <li key={d} className="mx-4">{d}</li>
-                                                            );
-                                                        })
-                                                    }
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </Link>
-                                    <div className="card-footer d-flex justify-content-end">
-                                            <button className='btn' onClick={() => editcard(p.name)}><FaEdit size={'20'} /></button>
-                                            <button className='btn' onClick={() => deleteCard(p.name)}><AiFillDelete size={'25'} /></button>
+                        resource.map((obj,i) => (
+                            <div key={JSON.stringify(obj)} className="shadow card w-100 mb-4">
+
+                                <div className="card-body d-flex">
+                                    <div className="d-flex align-items-center"><HiChip color={'#dc3545'} size={'50'}/></div>
+                                    <div className="card-body">
+                                        <h5 className="card-title fs-3 mx-4 text-capatalize">{`${root.subservice} ${i+1}`}</h5>
+                                        <ul className="d-flex flex-wrap" key={JSON.stringify(obj)}>
+                                            {
+                                                Object.entries(obj).map(([key, value]) => (
+                                                    <li className="mx-4" key={key}>
+                                                        {key}: {value}
+                                                    </li>
+                                                ))
+                                            }
+                                        </ul>
                                     </div>
                                 </div>
-                            );
-                        })
+                                <div className="card-footer d-flex justify-content-end">
+                                     <button 
+                                         className='btn' 
+                                         // onClick={() => editcard(p.name)}
+                                     >
+                                         <FaEdit size={'20'} />
+                                     </button>
+                                     <button 
+                                        className='btn' 
+                                         // onClick={() => deleteCard(p.name)}
+                                     >
+                                         <AiFillDelete size={'25'} />
+                                     </button>
+                                </div>
+                            </div>
+                        ))
                     }
                 </div>
             </div>
@@ -135,3 +164,45 @@ const SubService = () => {
 }
 
 export default SubService;
+
+
+
+// {
+//     resource.map( (p) => {
+//         return(
+//             <div key={p.Name} className="shadow card w-100 mb-4 ">
+
+                // <div className="card-body d-flex">
+                //     <div className="d-flex align-items-center"><HiChip color={'#dc3545'} size={'50'}/></div>
+                //     <div className="card-body">
+                //         <h5 className="card-title fs-3 mx-4 text-capatalize">{p.Name}</h5>
+                //         <ul className="d-flex flex-wrap">
+                //             {
+                //                 p.map( d => {
+                //                     return(
+                //                         <li key={d} className="mx-4">{d}</li>
+                //                     );
+                //                 })
+                //             }
+                //         </ul>
+                //     </div>
+                // </div>
+
+//                 <div className="card-footer d-flex justify-content-end">
+//                         <button 
+//                             className='btn' 
+//                             // onClick={() => editcard(p.name)}
+//                         >
+//                             <FaEdit size={'20'} />
+//                         </button>
+//                         <button 
+//                             className='btn' 
+//                             // onClick={() => deleteCard(p.name)}
+//                         >
+//                             <AiFillDelete size={'25'} />
+//                         </button>
+//                 </div>
+//             </div>
+//         );
+//     })
+// }

@@ -120,7 +120,7 @@ const Service = () => {
                 data-bs-toggle="modal" 
                 data-bs-target="#SubServiceModal"
             >
-                <MdCreate /> Create
+                <MdCreate /> Create Sub-Service
             </button>
 
             <div className="modal fade" id="SubServiceModal" aria-hidden="true">
