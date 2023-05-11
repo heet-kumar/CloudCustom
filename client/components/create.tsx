@@ -4,19 +4,23 @@ import {MdOutlineAlternateEmail} from 'react-icons/md'
 import {AiOutlineUser} from 'react-icons/ai'
 import { useEffect,useState } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
 
 const Create: React.FC = () => {
 
-    const [msg,setmsg] = useState<string>("");
-    const [name,setname] = useState<string>("");
+    const router = useRouter();
+
+    const [msg,setmsg] = useState<string>();
+    const [name,setname] = useState<string>();
     const [email,setemail] = useState<string>();
     const [password,setpassword] = useState<string>();
     const [cpassword,setcpassword] = useState<string>();
 
     const handleName = (e:React.ChangeEvent<HTMLInputElement>) => {
         console.log(e.currentTarget.value);
-        setemail(e.currentTarget.value);
+        setname(e.currentTarget.value);
     }
 
     const handleEmail = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +35,24 @@ const Create: React.FC = () => {
 
     const handleRePassword = (e:React.ChangeEvent<HTMLInputElement>) => {
         console.log(e.currentTarget.value);
-        setpassword(e.currentTarget.value);
+        setcpassword(e.currentTarget.value);
+    }
+
+    const authenticate = async() => {
+        if(password === cpassword || name==="" || email===""){
+            await axios.post("http://localhost:5000/signup",{name,email,password})
+            .then( res => {
+                console.log(res.data.msg);
+                router.push("/");
+            })
+            .catch( err => {
+                console.log("Error :",err);
+                setmsg(err.response.data.msg);
+            })
+        }
+        else{
+            setmsg("Password dosen't match or field is empty")
+        }
     }
 
 
@@ -87,7 +108,13 @@ const Create: React.FC = () => {
                         />
                     </div>
 
-                    <button type="button" className="btn btn-outline-dark">SignUp</button>
+                    <button 
+                        type="button" 
+                        className="btn btn-outline-dark"
+                        onClick={authenticate}
+                    >
+                        SignUp
+                    </button>
                     <Link href={'/'}><div className="align-self-start btn btn-link link-offset-2 link-underline link-underline-opacity-0" role="button" >Login</div></Link>
                 </div>
             </div>

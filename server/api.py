@@ -1,10 +1,24 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, abort
 from flask_cors import CORS,cross_origin
 import solution
+import psycopg2
+from psycopg2 import IntegrityError
 
 app = Flask(__name__)
 
 CORS(app)
+
+class CustomException(Exception):
+    def __init__(self, message):
+        self.message = message
+
+conn = psycopg2.connect(
+    database="postgres",
+    user="postgres",
+    password="postgres",
+    host="localhost",
+    port="5432"
+)
 
 @app.route('/')
 def index():
@@ -43,6 +57,66 @@ def index():
 #                 return jsonify({"msg": "Unsupported File entered"}), 401
 #         else:
 #             return jsonify({'error': 'file not allowed'}), 400
+
+'''
+    Signup API
+'''
+
+@app.route('/signup', methods=['POST'], strict_slashes=False)
+@cross_origin()
+def create_user():
+    try:
+        data = request.json
+        print(data)
+        cur = conn.cursor()
+        str_service = "INSERT into cloudusers(name,email,password) VALUES('" + data['name'] + "','" + data['email'] + "','" + data['password'] + "');"
+        cur.execute(str_service)
+        conn.commit()
+        cur.close()
+        # Return a success message
+        return jsonify({"msg": "Success"}), 201
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        t = error_message.find("DETAIL")
+        print("Check position : ",t)
+        return jsonify({"msg": error_message[t:]}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
+
+
+@app.route('/login', methods=['GET','POST'], strict_slashes=False)
+@cross_origin()
+def login_user():
+    try:
+        data = request.json
+        print(data)
+        cur = conn.cursor()
+        str_service = "SELECT * FROM cloudusers WHERE email='"+data['email']+"' AND password='"+data['password']+"';"
+        cur.execute(str_service)
+        rows = cur.fetchall()
+        cur.close()
+        if(len(rows)):
+            # Return a success message
+            return jsonify({"msg": "Success"}), 201
+        else:
+            raise IntegrityError("User Dosn't Exist")
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        print("Check position : ",error_message)
+        return jsonify({"msg": error_message}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
+
 
 '''
     Service API

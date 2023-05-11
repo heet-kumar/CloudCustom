@@ -1,5 +1,5 @@
 import psycopg2
-import json
+from psycopg2 import IntegrityError
 
 conn = psycopg2.connect(
     database="postgres",
@@ -10,6 +10,28 @@ conn = psycopg2.connect(
 )
 
 cur = conn.cursor()
+
+class CustomException(Exception):
+    def __init__(self, message):
+        self.message = message
+
+
+''' Login '''
+
+def create_user(name,email,password):
+    try:
+        str_service = "INSERT into cloudusers(name,email,password) VALUES('" + name + "','" + email + "','" + password + "');"
+        print(str_service)
+        cur.execute(str_service)
+        conn.commit()
+        return "Success"
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        raise CustomException(error_message)
+
+
+''' Service '''
 
 def create_services(servicename,servicedesc):
     str_service = "INSERT INTO services(name,dsc) VALUES('"+servicename+"','"+servicedesc+"');"
@@ -53,6 +75,7 @@ def name_service(name):
     print(result)
     return result
 
+''' SubService '''
 
 def all_subservices():
     str_services = "SELECT * FROM subservices;"
