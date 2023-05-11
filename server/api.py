@@ -88,7 +88,7 @@ def login_user():
 
 
 '''
-    Service API
+    Services API
 '''
 
 # Create Service API
@@ -143,7 +143,7 @@ def delete_service():
 
 # All Service API
 @app.route('/services/all', methods=['GET'])
-def all_resources():
+def all_service():
     try:
         cur = conn.cursor()
         str_services = "SELECT * FROM services;"
@@ -172,7 +172,7 @@ def all_resources():
 
 # Get Service By Name
 @app.route('/services/name', methods=['POST'])
-def get_by_name():
+def get_by_name_service():
     try:
         data = request.json
         print(data)
@@ -200,6 +200,41 @@ def get_by_name():
         error_message = f"Error: {e}"
         conn.rollback()
         return jsonify({"msg": error_message}), 500
+
+'''
+    Sub-Services API
+'''
+
+@app.route('/subservices/all', methods=['GET'])
+def all_subservice():
+    try:
+        cur = conn.cursor()
+        str_services = "SELECT * FROM subservices;"
+        cur.execute(str_services)
+        rows = cur.fetchall()
+        result = []
+        for row in rows:
+            result.append({
+                "ssid": row[0],
+                "sid": row[1],
+                "name": row[2],
+                "desc": row[3],
+                "columns": row[4]
+            })
+        print(result)
+        return jsonify({"msg": result}), 200
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        print("Check position : ",error_message)
+        return jsonify({"msg": error_message}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
+
 
 
 if __name__ == '__main__':
