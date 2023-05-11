@@ -39,7 +39,7 @@ const Create: React.FC = () => {
     }
 
     const authenticate = async() => {
-        if(password === cpassword || name==="" || email===""){
+        if(password === cpassword && name!=="" && email!==""){
             await axios.post("http://localhost:5000/signup",{name,email,password})
             .then( res => {
                 console.log(res.data.msg);
@@ -51,7 +51,7 @@ const Create: React.FC = () => {
             })
         }
         else{
-            setmsg("Password dosen't match or field is empty")
+            setmsg("Password dosen't match or fields are empty")
         }
     }
 

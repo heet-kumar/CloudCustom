@@ -3,12 +3,16 @@ import {RiLockPasswordLine} from 'react-icons/ri'
 import {MdOutlineAlternateEmail} from 'react-icons/md'
 import { useEffect,useState } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
 
 const Login: React.FC = () => {
 
+    const router = useRouter();
+
     const [msg,setmsg] = useState<string>("");
-    const [email,setemail] = useState<string>();
+    const [email,setemail] = useState<string>("");
     const [password,setpassword] = useState<string>();
 
     const handleEmail = (e:React.ChangeEvent<HTMLInputElement>) => {
@@ -21,6 +25,23 @@ const Login: React.FC = () => {
         setpassword(e.currentTarget.value);
     }
 
+    const authenticate = async() => {
+        if(password!=="" && email!==""){
+            await axios.post("http://localhost:5000/login",{email,password})
+            .then( res => {
+                console.log(res.data.msg);
+                localStorage.setItem('Access','true')
+                router.push("/dashboard");
+            })
+            .catch( err => {
+                console.log("Error :",err);
+                setmsg(err.response.data.msg);
+            })
+        }
+        else{
+            setmsg("fields are empty")
+        }
+    }
 
     return(
         <div className="d-flex .justify-content-between">
@@ -51,7 +72,13 @@ const Login: React.FC = () => {
                             onChange={handlePassword}
                         />
                     </div>
-                    <button type="button" className="btn btn-outline-dark">Login</button>
+                    <button 
+                        type="button" 
+                        className="btn btn-outline-dark"
+                        onClick={authenticate}
+                    >
+                        Login
+                    </button>
                     <Link href={'/signup'}><div className="align-self-start btn btn-link link-offset-2 link-underline link-underline-opacity-0" role="button" >Create account</div></Link>
                 </div>
             </div>

@@ -7,6 +7,7 @@ import { AiFillDelete, AiOutlineDelete } from 'react-icons/ai';
 import { FaEdit } from 'react-icons/fa';
 import Link from 'next/link';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 
 interface ServiceData {
@@ -16,6 +17,8 @@ interface ServiceData {
 }
 
 const Dashboard = () => {
+
+    const router = useRouter();
 
     const [service,setservice] = useState<string>("");
     const [desc,setdesc] = useState<string>("");
@@ -62,6 +65,11 @@ const Dashboard = () => {
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
     ])
+
+    useEffect( () => {
+        const data = localStorage.getItem('Access');
+        if(data!=='true') router.push("/")
+    },[])
 
     useEffect( () => {
         const getData = async() => {

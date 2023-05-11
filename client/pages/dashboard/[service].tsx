@@ -23,6 +23,11 @@ const Service = () => {
         }
     )
 
+    useEffect( () => {
+        const data = localStorage.getItem('Access');
+        if(data!=='true') route.push("/")
+    },[])
+
     useEffect(() => {
         console.log("route -> : ",root)
         const getData = async() => {
