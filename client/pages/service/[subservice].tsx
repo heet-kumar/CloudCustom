@@ -122,7 +122,7 @@ const SubService = () => {
     },[state])
 
     const editCard = (id:number) => {
-        
+
     }
 
     const deleteCard = async(id:number) => {
@@ -232,16 +232,16 @@ const SubService = () => {
                         resource.map((p,i) => {
                             if(p.ssid===subServiceData.ssid)
                             return(
-                                <div key={i} className="shadow card w-100 mb-4">
+                                <div key={p.id} className="shadow card w-100 mb-4">
 
                                     <div className="card-body d-flex">
                                         <div className="d-flex align-items-center"><HiChip color={'#dc3545'} size={'50'}/></div>
                                         <div className="card-body">
                                             <h5 className="card-title fs-3 mx-4 text-capitalize">{p.name}</h5>
-                                            <ul key={i} className="d-flex flex-wrap gap-4">
+                                            <ul className="d-flex flex-wrap gap-4">
                                             {
                                                 JSON.parse(p.params).map( (obj:dataObj) => (
-                                                    <li key={obj.name} className="">
+                                                    <li key={JSON.stringify(obj)} className="">
                                                         {
                                                             Object.entries(obj).map(([key,value]) => (
                                                                 <div key={key}>{key}: {value}</div>
