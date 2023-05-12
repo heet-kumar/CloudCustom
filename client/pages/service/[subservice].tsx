@@ -46,6 +46,11 @@ const SubService:React.FC = () => {
     )
 
     useEffect(() => {
+        const data = localStorage.getItem('Access');
+        if(data!=='true') route.push("/")
+    },[])
+
+    useEffect(() => {
         console.log("route -> : ",root)
         const getData = async() => {
             await axios.post("http://localhost:5000/subservices/name",{name: root.subservice})
