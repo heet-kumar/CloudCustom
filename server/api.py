@@ -388,5 +388,28 @@ def create_resources():
         return jsonify({"msg": error_message}), 500
 
 
+@app.route('/resources/delete', methods=['DELETE','POST'])
+def delete_resources():
+    try:
+        data = request.json
+        print(data)
+        cur = conn.cursor()
+        str_service = "DELETE from resources where id=" + str(data['id']) + ";"
+        print(str_service)
+        cur.execute(str_service)
+        conn.commit()
+        return jsonify({"msg": "User Deleted Successfully"}), 200
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        print("Check position : ",error_message)
+        return jsonify({"msg": error_message}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
+
 if __name__ == '__main__':
     app.run(debug=True)

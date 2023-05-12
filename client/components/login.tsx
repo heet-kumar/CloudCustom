@@ -30,7 +30,7 @@ const Login: React.FC = () => {
             await axios.post("http://localhost:5000/login",{email,password})
             .then( res => {
                 console.log(res.data.msg);
-                localStorage.setItem('Access','true')
+                localStorage.setItem('Access','true');
                 router.push("/dashboard");
             })
             .catch( err => {

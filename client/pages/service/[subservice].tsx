@@ -121,6 +121,20 @@ const SubService = () => {
 
     },[state])
 
+    const editCard = (id:number) => {
+        
+    }
+
+    const deleteCard = async(id:number) => {
+
+        axios.post("http://localhost:5000/resources/delete",{id})
+        .then( res => {
+            console.log(res.data.msg);
+            setState(!state);
+        })
+        .catch( err => console.log(err))
+    }
+
     return(
         <div className={style.service}>
 
@@ -242,13 +256,13 @@ const SubService = () => {
                                     <div className="card-footer d-flex justify-content-end">
                                         <button 
                                             className='btn' 
-                                            // onClick={() => editcard(p.name)}
+                                            onClick={() => editCard(p.id)}
                                         >
                                             <FaEdit size={'20'} />
                                         </button>
                                         <button 
                                             className='btn' 
-                                            // onClick={() => deleteCard(p.name)}
+                                            onClick={() => deleteCard(p.id)}
                                         >
                                             <AiFillDelete size={'25'} />
                                         </button>
