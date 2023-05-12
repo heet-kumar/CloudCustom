@@ -290,5 +290,102 @@ def delete_subservice():
         conn.rollback()
         return jsonify({"msg": error_message}), 500
 
+# Serach Sub Service By Name
+@app.route('/subservices/name', methods=['POST'])
+def get_by_name_subservice():
+    try:
+        data = request.json
+        print(data)
+        cur = conn.cursor()
+        str_service = "SELECT * FROM subservices WHERE name='" + data['name'] + "';"
+        cur.execute(str_service)
+        rows = cur.fetchall()
+        result = []
+        for row in rows:
+            print("Display : ",row)
+            result.append({
+                "ssid": row[0],
+                "sid": row[1],
+                "name": row[2],
+                "desc": row[3],
+                "columns": row[4]
+            })
+        print(result)
+        return jsonify(result), 200
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        print("Check position : ",error_message)
+        return jsonify({"msg": error_message}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
+
+'''
+    Resource
+'''
+
+# Get All Resources
+@app.route('/resources/all', methods=['GET','POST'])
+def all_resources():
+    try:
+        cur = conn.cursor()
+        str_services = "SELECT * FROM resources;"
+        cur.execute(str_services)
+        rows = cur.fetchall()
+        result = []
+        for row in rows:
+            result.append({
+                "id": rows[0],
+                "sid": row[1],
+                "ssid": row[2],
+                "name": row[3],
+                "params": row[4]
+            })
+        print(result)
+        return jsonify({"msg": result}), 200
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        print("Check position : ",error_message)
+        return jsonify({"msg": error_message}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
+
+
+# Create Resources
+@app.route('/resources/create', methods=['POST'],strict_slashes=False)
+@cross_origin()
+def create_resources():
+    try:
+        data = request.json
+        print(data)
+        cur = conn.cursor()
+        str_service = "INSERT INTO resources(sid,ssid,name,params) VALUES(" + str(data['sid']) + "," + str(data['ssid']) + ",'" + data['name'] + "','" + data['params'] + "');"
+        print(str_service)
+        cur.execute(str_service)
+        conn.commit()
+        cur.close()
+        return jsonify({"msg": "Success"}), 201
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        t = error_message.find("DETAIL")
+        return jsonify({"msg": error_message[t:]}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
+
+
 if __name__ == '__main__':
     app.run(debug=True)

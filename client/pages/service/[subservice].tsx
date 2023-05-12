@@ -10,35 +10,64 @@ import Link from "next/link";
 import axios from "axios";
 
 
+interface MyObj {
+    [key: string]: string;
+}
+
 const SubService = () => {
 
     const route = useRouter();
     const root = route.query;
     console.log("Root : ",root.subservice);
 
-    const [subServiceData,setSubServiceData] = useState(
+    const [obj,setObj] = useState<Array<Object>>([]);
+
+    const [subServiceData,setSubServiceData] = useState<{ssid: number, sid: number, name: string, desc: string, columns:string}>(
         {
+            "ssid": 27,
+            "sid": 32,
             "name": "Pub/Sub",
             "desc": "XYZ Ipsum is simply dummy text of the printing and typesetting industry.",
-            "columns": ["Name","Region","Machine Family","CPUs","Memory","Boot Disk Size","Boot Disk OS","Allow traffic"]
+            "columns": '["Name","Region","Machine Family","CPUs","Memory","Boot Disk Size","Boot Disk OS","Allow traffic"]'
         }
     )
 
-    
+    useEffect(() => {
+        console.log("route -> : ",root)
+        const getData = async() => {
+            await axios.post("http://localhost:5000/subservices/name",{name: root.subservice})
+            .then( async(res) => {
+                console.log("Testing : ",res);
+                if(res.data.length!==0) setSubServiceData(res.data[0])
+            })
+            .catch( err => console.log(err))  
+        }
+        if(root.subservice!==undefined) getData();
+    },[root.subservice])
 
-    const [resourceName,setResourceName] = useState<string>("");
-    const [field,setfield] = useState<Array<string>>([]);
+    const myObj: MyObj = {};
+
+
+    const [name,setName] = useState<string>("")
+    const [text,setText] = useState<string>("");
+
+    const handleInput = (e:React.ChangeEvent<HTMLInputElement>) => {
+        setText(e.currentTarget.value);
+    }
+
+    const handlesave = (p:string) => {
+        myObj[p] = text;
+        console.log("Object : ",myObj)
+        setObj([...obj,myObj])
+    }
+
+    const handleName = (e:React.ChangeEvent<HTMLInputElement>) => {
+        setName(e.currentTarget.value);
+    }
     
     const [resource,setResource] = useState<Array<object>>([
         {
-            'Name': 'Kubernate Engine 1',
-            'Region': "asia-east-1",
-            'Machine Family': 'General Purpose',
-            'CPUs' : '4',
-            'Memory': '64',
-            'Boot Disk Size': '10',
-            'Boot Disk OS': 'Linux',
-            'Allow Traffic': 'http'
+            "Name": "Kubernate Engine 1"
         },
         {
             'Name': 'Kubernate Engine 2',
@@ -51,6 +80,23 @@ const SubService = () => {
             'Allow Traffic': 'https'
         },
     ])
+
+    const handleCreate = async() => {
+        console.log("Final Data : ",obj);
+        await axios.post("http://localhost:5000/resources/create",{
+            sid: subServiceData.sid,
+            ssid: subServiceData.ssid,
+            name,
+            params: JSON.stringify(obj)
+        })
+        .then( res => {
+            console.log(res.data.msg)
+        })
+        .catch( err => {
+            console.log(err);
+        })
+    }
+
 
 
     return(
@@ -71,27 +117,52 @@ const SubService = () => {
                 <div className="modal-dialog">
                     <div className="modal-content">
                     <div className="modal-header">
-                        <h1 className="modal-title fs-5" id="exampleModalLabel">Create New Service</h1>
+                        <h1 className="modal-title fs-5 text-capitalize" id="exampleModalLabel">{subServiceData.name}</h1>
                         <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div className="modal-body">
-                        <div className="form-floating mb-3">
-                            <input 
-                                type="text" 
-                                className="form-control" 
-                                id="floatingService" 
-                                // onChange={handleServiceName}
-                                placeholder="Enter Service Name" 
-                            />
-                            <label htmlFor="floatingService">Service Name</label>
-                        </div>
+                            <div className="form-floating mb-3">
+                                <input 
+                                    type="text" 
+                                    className="form-control" 
+                                    id="floatingService" 
+                                    onChange={handleName}
+                                />
+                                <label htmlFor="floatingService">Name</label>
+                            </div>
+                        {
+                            JSON.parse(subServiceData.columns).map( (p:string) => {
+                                return(
+                                    <div key={p} className="d-flex align-items-center justify-content-between">
+                                        <div className="form-floating mb-3">
+                                            <input 
+                                                type="text" 
+                                                className="form-control" 
+                                                id="floatingService" 
+                                                onChange={handleInput}
+                                            />
+                                            <label htmlFor="floatingService">{p}</label>
+                                        </div>
+                                        <div >
+                                            <button 
+                                                className="btn btn-primary" 
+                                                type="submit"
+                                                onClick={() => handlesave(p)}
+                                            >
+                                                Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                );
+                            })
+                        }
                     </div>
                     <div className="modal-footer">
                         <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button 
                             type="button" 
                             className="btn btn-primary"
-                            // onClick={handleCreate}
+                            onClick={handleCreate}
                             data-bs-dismiss="modal"
                         >
                             Save
@@ -110,7 +181,7 @@ const SubService = () => {
                         <p className="card-text fs-5 fw-500">{subServiceData?.desc}</p>
                         <ul className="d-flex flex-wrap">
                         {
-                            subServiceData.columns.map( d => {
+                            JSON.parse(subServiceData.columns).map( (d:string) => {
                                 return(
                                     <li key={d} className="mx-4">{d}</li>
                                 );
@@ -128,7 +199,7 @@ const SubService = () => {
                                 <div className="card-body d-flex">
                                     <div className="d-flex align-items-center"><HiChip color={'#dc3545'} size={'50'}/></div>
                                     <div className="card-body">
-                                        <h5 className="card-title fs-3 mx-4 text-capatalize">{`${root.subservice} ${i+1}`}</h5>
+                                        <h5 className="card-title fs-3 mx-4 text-capitalize">{`${root.subservice} ${i+1}`}</h5>
                                         <ul className="d-flex flex-wrap" key={JSON.stringify(obj)}>
                                             {
                                                 Object.entries(obj).map(([key, value]) => (

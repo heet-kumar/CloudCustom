@@ -43,7 +43,6 @@ const Service = () => {
     },[root.service])
 
     const fieldList:string[] = [
-        "Name",
         "Region",
         "Machine Family",
         "CPUs",

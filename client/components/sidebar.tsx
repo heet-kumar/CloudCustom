@@ -1,10 +1,12 @@
 import { useRouter } from 'next/router';
 import styles from '../styles/sidebar.module.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
 
 
 interface ServiceData {
+    sid: number,
     name: string,
     desc: string
 }
@@ -15,32 +17,50 @@ const Sidebar:React.FC = () => {
 
     const [data,setdata] = useState<Array<ServiceData>>([
         {
+            "sid": 1,
             "name": "Compute Service",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
         {
+            "sid": 2,
             "name": "Networking",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
         {
+            "sid": 3,
             "name": "Storage Service",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
         {
+            "sid": 4,
             "name": "Big Data",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
         {
+            "sid": 5,
             "name": "Security and Identity Managment",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
         {
+            "sid": 6,
             "name": "Operation Tools",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
     ]);
 
-
+    useEffect(() => {
+        const getData = async() => {
+            await axios.get("http://localhost:5000/services/all")
+            .then( res => {
+                // console.log(res.data);
+                setdata(res.data.msg);
+            })
+            .catch( err => {
+                console.log(err);
+            })
+        }
+        getData();
+    },[])
 
     return(
         <div className={styles.sidebar}>
