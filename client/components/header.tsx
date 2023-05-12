@@ -14,7 +14,7 @@ const Header:React.FC = () => {
     const router = useRouter();
 
     const [data,setdata] = useState<Array<ServiceData>>([]);
-    const [searchText,setsearch] = useState<string>();
+    const [searchText,setSearchText] = useState<string>();
 
     useEffect( () => {
 
@@ -31,11 +31,6 @@ const Header:React.FC = () => {
         if(router.asPath === '/dashboard') getData();
 
     },[])
-
-    const handleSearch = (e:React.ChangeEvent<HTMLInputElement>,newValue:any) => {
-        setsearch(newValue);
-        console.log(searchText)
-    }
 
 
     return(
@@ -71,7 +66,10 @@ const Header:React.FC = () => {
                         }}
                         freeSolo
                         options={data.map((option) => option.name)}
-                        onChange={handleSearch}
+                        onChange={(e,v) => {
+                            if(v==null) setSearchText("");
+                            else setSearchText(v);
+                        }}
                         renderInput={(params) => <TextField {...params} label="freeSolo" />}
                     />
                     <div className="align-self-center">

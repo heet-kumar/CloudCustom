@@ -39,8 +39,7 @@ def create_user():
         cur.execute(str_service)
         conn.commit()
         cur.close()
-        # Return a success message
-        return jsonify({"msg": "Success"}), 201
+        return jsonify({"msg": "Success"}), 202
 
     except IntegrityError as e:
         error_message = f"Error: {e}"
@@ -70,8 +69,7 @@ def login_user():
         rows = cur.fetchall()
         cur.close()
         if(len(rows)):
-            # Return a success message
-            return jsonify({"msg": "Success"}), 201
+            return jsonify({"msg": "Success"}), 202
         else:
             raise IntegrityError("User Dosn't Exist")
 
@@ -109,7 +107,6 @@ def create_service():
     except IntegrityError as e:
         error_message = f"Error: {e}"
         conn.rollback()
-        # t = error_message.find("DETAIL")
         return jsonify({"msg": error_message}), 406
 
     except Exception as e:
