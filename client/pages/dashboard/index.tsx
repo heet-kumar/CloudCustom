@@ -117,7 +117,7 @@ const Dashboard:React.FC = () => {
         })
     }
 
-    const editcard = (cname:string) => {
+    const editcard = (id:number) => {
 
     }
 
@@ -188,7 +188,7 @@ const Dashboard:React.FC = () => {
                             <div key={p.name} className={styles.card}>
                                 <div className='card'>
                                     <div className="card-header d-flex justify-content-between">
-                                        <button className='btn' onClick={() => editcard(p.name)}><FaEdit size={'20'} /></button>
+                                        <button className='btn' onClick={() => editcard(p.sid)}><FaEdit size={'20'} /></button>
                                         <button className='btn' onClick={() => deleteCard(p.sid)}><AiFillDelete size={'25'} /></button>
                                     </div>
                                     <Link href={`/dashboard/${p.name.toLowerCase()}`} className='text-decoration-none text-black'>
