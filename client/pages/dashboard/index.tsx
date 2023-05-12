@@ -74,9 +74,15 @@ const Dashboard = () => {
     useEffect( () => {
         const getData = async() => {
             console.log("Inside UseEffect");
-            const result = await axios.get("http://localhost:5000/services/all");
-            console.log(result.data.msg)
-            setdata(result.data.msg)
+            await axios.get("http://localhost:5000/services/all")
+            .then( res => {
+                console.log(res.data.msg);
+                setdata(res.data.msg)
+            })
+            .catch( err => {
+                console.log(err);
+                alert(err.response.data.msg);
+            })
         }
         getData();
     },[state])
@@ -91,6 +97,7 @@ const Dashboard = () => {
         })
         .catch( err => {
             console.log(err);
+            alert(err.response.data.msg);
         })
         
     }
@@ -106,6 +113,7 @@ const Dashboard = () => {
         })
         .catch( err => {
             console.log(err)
+            alert(err.response.data.msg);
         })
     }
 

@@ -109,8 +109,8 @@ def create_service():
     except IntegrityError as e:
         error_message = f"Error: {e}"
         conn.rollback()
-        t = error_message.find("DETAIL")
-        return jsonify({"msg": error_message[t:]}), 406
+        # t = error_message.find("DETAIL")
+        return jsonify({"msg": error_message}), 406
 
     except Exception as e:
         error_message = f"Error: {e}"

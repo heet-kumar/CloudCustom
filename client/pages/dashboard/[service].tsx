@@ -37,7 +37,10 @@ const Service = () => {
                 console.log("Testing : ",res);
                 if(res.data.length!==0) setServiceData(res.data[0])
             })
-            .catch( err => console.log(err))  
+            .catch( err => {
+                console.log(err);
+                alert(err.response.data.msg);
+            })  
         }
         if(root.service!==undefined) getData();
     },[root.service])
@@ -113,7 +116,10 @@ const Service = () => {
                 console.log(res.data.msg);
                 setSubServices(res.data.msg);
             })
-            .catch( err => console.log(err))
+            .catch( err => {
+                console.log(err);
+                alert(err.response.data.msg);
+            })
         }
         getData();
     },[state])
@@ -142,6 +148,7 @@ const Service = () => {
         })
         .catch( err => {
             console.log(err);
+            alert(err.response.data.msg);
         })
     }
 
@@ -157,6 +164,7 @@ const Service = () => {
         })
         .catch( err => {
             console.log(err);
+            alert(err.response.data.msg);
         })
 
     }

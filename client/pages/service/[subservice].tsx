@@ -53,7 +53,10 @@ const SubService = () => {
                 console.log("Testing : ",res);
                 if(res.data.length!==0) setSubServiceData(res.data[0])
             })
-            .catch( err => console.log(err))  
+            .catch( err => {
+                console.log(err);
+                alert(err.response.data.msg);
+            })  
         }
         if(root.subservice!==undefined) getData();
     },[root.subservice])
@@ -102,6 +105,7 @@ const SubService = () => {
         })
         .catch( err => {
             console.log(err);
+            alert(err.response.data.msg);
         })
     }
 
@@ -115,6 +119,7 @@ const SubService = () => {
             })
             .catch( err => {
                 console.log(err);
+                alert(err.response.data.msg);
             })
         }
         getData();
@@ -132,7 +137,10 @@ const SubService = () => {
             console.log(res.data.msg);
             setState(!state);
         })
-        .catch( err => console.log(err))
+        .catch( err => {
+            console.log(err);
+            alert(err.response.data.msg);
+        })
     }
 
     return(
@@ -280,40 +288,3 @@ const SubService = () => {
 export default SubService;
 
 
-
-{/* 
-
-<div key={i} className="shadow card w-100 mb-4">
-
-    <div className="card-body d-flex">
-        <div className="d-flex align-items-center"><HiChip color={'#dc3545'} size={'50'}/></div>
-        <div className="card-body">
-            <h5 className="card-title fs-3 mx-4 text-capitalize">{`${root.subservice} ${i+1}`}</h5>
-            <ul className="d-flex flex-wrap" key={JSON.stringify(obj)}>
-                {
-                    Object.entries(obj).map(([key, value]) => (
-                        <li className="mx-4" key={key}>
-                            {key}: {value}
-                        </li>
-                    ))
-                }
-            </ul>
-        </div>
-    </div>
-    <div className="card-footer d-flex justify-content-end">
-        <button 
-            className='btn' 
-            // onClick={() => editcard(p.name)}
-        >
-            <FaEdit size={'20'} />
-        </button>
-        <button 
-            className='btn' 
-            // onClick={() => deleteCard(p.name)}
-        >
-            <AiFillDelete size={'25'} />
-        </button>
-    </div>
-</div> 
-
-*/}
