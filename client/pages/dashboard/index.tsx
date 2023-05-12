@@ -117,8 +117,29 @@ const Dashboard:React.FC = () => {
         })
     }
 
-    const editcard = (id:number) => {
+    const handleUpdate = async(id:number,name:string,desc:string) => {
+        await axios.put("http://localhost:5000/services/edit",{id,name,desc})
+        .then( res => {
+            // console.log(res.data.msg);
+            setState(!state);
+        })
+        .catch( err => {
+            console.log(err);
+            alert(err.response.data.msg);
+        })
+    }
 
+    const [editData,setEditData] = useState<ServiceData>({
+        sid: 40,
+        name: "Dummy Data",
+        desc: "Dummy Data Description"
+    })
+
+    const handleEdit = (id:number) => {
+        const newData:ServiceData[] = data.filter( p => p.sid===id);
+        setEditData(newData[0]);
+        setdesc(newData[0].desc);
+        setservice(newData[0].name);
     }
 
     return(
@@ -179,6 +200,60 @@ const Dashboard:React.FC = () => {
                 </div>
             </div>
 
+            {/* Edit Modal */}
+
+            <div className="modal fade" id="tryModal" aria-hidden="true">
+                <div className="modal-dialog">
+                    <div className="modal-content">
+                    <div className="modal-header">
+                        <h1 className="modal-title fs-5" id="exampleModalLabel">Edit Service</h1>
+                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div className="modal-body">
+                        <div className="form-floating mb-3">
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                id="floatingService" 
+                                onChange={(e) => {
+                                    console.log(e.target.value);
+                                    setservice(e.target.value);
+                                }}
+                                placeholder="Enter Service Name"
+                                value={service}
+                            />
+                            <label htmlFor="floatingService">Service Name</label>
+                        </div>
+                        <div className="form-floating">
+                            <input 
+                                type="text" 
+                                className="form-control" 
+                                id="floatingDesc" 
+                                onChange={(e) => {
+                                    console.log(e.target.value);
+                                    setdesc(e.target.value);
+                                }}
+                                placeholder="Short Description" 
+                                value={desc}
+                            />
+                            <label htmlFor="floatingDesc">Short Description</label>
+                        </div>
+                    </div>
+                    <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button 
+                            type="button" 
+                            className="btn btn-primary"
+                            onClick={() => handleUpdate(editData.sid,service,desc)}
+                            data-bs-dismiss="modal"
+                        >
+                            Save Edit Changes
+                        </button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Basic container */}
 
             <div className={styles.dashboard_container}>
@@ -188,7 +263,7 @@ const Dashboard:React.FC = () => {
                             <div key={p.name} className={styles.card}>
                                 <div className='card'>
                                     <div className="card-header d-flex justify-content-between">
-                                        <button className='btn' onClick={() => editcard(p.sid)}><FaEdit size={'20'} /></button>
+                                        <button className='btn' data-bs-toggle="modal" data-bs-target="#tryModal" onClick={() => handleEdit(p.sid)} ><FaEdit size={'20'} /></button>
                                         <button className='btn' onClick={() => deleteCard(p.sid)}><AiFillDelete size={'25'} /></button>
                                     </div>
                                     <Link href={`/dashboard/${p.name.toLowerCase()}`} className='text-decoration-none text-black'>

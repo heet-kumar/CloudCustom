@@ -60,7 +60,7 @@ const Sidebar:React.FC = () => {
             })
         }
         if(route.asPath === '/dashboard') getData();
-    })
+    },[])
 
     return(
         <div className={styles.sidebar}>

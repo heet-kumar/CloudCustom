@@ -114,6 +114,32 @@ def create_service():
         conn.rollback()
         return jsonify({"msg": error_message}), 500
 
+
+@app.route('/services/edit', methods=['PUT','POST'],strict_slashes=False)
+@cross_origin()
+def edit_service():
+    try:
+        data = request.json
+        print(data)
+        cur = conn.cursor()
+        str_service = "UPDATE services SET name='"+data['name']+"', dsc='"+data['desc']+"' WHERE sid="+str(data['id'])+";"
+        print(str_service)
+        cur.execute(str_service)
+        conn.commit()
+        cur.close()
+        return jsonify({"msg": "Success"}), 201
+
+    except IntegrityError as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 406
+
+    except Exception as e:
+        error_message = f"Error: {e}"
+        conn.rollback()
+        return jsonify({"msg": error_message}), 500
+
+
 # Delete Service API
 @app.route('/services/delete', methods=['DELETE','POST'])
 def delete_service():
