@@ -13,7 +13,7 @@ interface ServiceData {
 
 const Sidebar:React.FC = () => {
 
-    // const router = useRouter;
+    const route = useRouter();
 
     const [data,setdata] = useState<Array<ServiceData>>([
         {
@@ -59,8 +59,8 @@ const Sidebar:React.FC = () => {
                 console.log(err);
             })
         }
-        getData();
-    },[])
+        if(route.asPath === '/dashboard') getData();
+    })
 
     return(
         <div className={styles.sidebar}>

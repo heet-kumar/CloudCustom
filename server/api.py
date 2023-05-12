@@ -338,14 +338,15 @@ def all_resources():
         rows = cur.fetchall()
         result = []
         for row in rows:
+            print("Testing : ",row)
             result.append({
-                "id": rows[0],
+                "id": row[0],
                 "sid": row[1],
                 "ssid": row[2],
                 "name": row[3],
                 "params": row[4]
             })
-        print(result)
+        # print(result)
         return jsonify({"msg": result}), 200
 
     except IntegrityError as e:
