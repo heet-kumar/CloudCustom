@@ -74,7 +74,7 @@ const Sidebar:React.FC = () => {
                     data.map( (p:ServiceData) => {
                         return (
                             <Link key={p.name} className='w-100 text-decoration-none' href={`/dashboard/${p.name.toLowerCase()}`}>
-                                <div className="fs-5 mt-2 p-3 text-light fw-bolder w-100">
+                                <div className="fs-5 mt-2 p-3 text-light fw-bolder w-100 text-capitalize">
                                     {p.name}
                                 </div>
                             </Link>

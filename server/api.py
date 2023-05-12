@@ -131,6 +131,9 @@ def delete_service():
         str_service = "DELETE from subservices where sid=" + str(data['id']) + ";"
         cur.execute(str_service)
         conn.commit()
+        str_service = "DELETE from resources where sid=" + str(data['id']) + ";"
+        cur.execute(str_service)
+        conn.commit()
         return jsonify({"msg": "User Deleted Successfully"}), 200
 
     except IntegrityError as e:
@@ -274,6 +277,10 @@ def delete_subservice():
         print(data)
         cur = conn.cursor()
         str_service = "DELETE from subservices where ssid=" + str(data['id']) + ";"
+        print(str_service)
+        cur.execute(str_service)
+        conn.commit()
+        str_service = "DELETE from resources where ssid=" + str(data['id']) + ";"
         print(str_service)
         cur.execute(str_service)
         conn.commit()
