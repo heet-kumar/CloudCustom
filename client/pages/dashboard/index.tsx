@@ -16,7 +16,7 @@ interface ServiceData {
     desc: string
 }
 
-const Dashboard = () => {
+const Dashboard:React.FC = () => {
 
     const router = useRouter();
 

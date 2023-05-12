@@ -10,7 +10,7 @@ import Link from "next/link";
 import axios from "axios";
 
 
-const Service = () => {
+const Service:React.FC = () => {
 
     const route = useRouter();
     const root = route.query;

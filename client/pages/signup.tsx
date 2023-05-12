@@ -1,7 +1,7 @@
 import Header from "../components/header";
 import Create from "../components/create";
 
-const Signup = () => {
+const Signup:React.FC = () => {
     return(
         <div>
             <Create />

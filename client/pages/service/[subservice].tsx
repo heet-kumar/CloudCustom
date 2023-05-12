@@ -26,7 +26,7 @@ interface resData {
     params: string
 }
 
-const SubService = () => {
+const SubService:React.FC = () => {
 
     const route = useRouter();
     const root = route.query;
