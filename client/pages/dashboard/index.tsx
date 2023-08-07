@@ -35,32 +35,32 @@ const Dashboard:React.FC = () => {
 
     const [data,setdata] = useState<Array<ServiceData>>([
         {
-            "sid": 20,
+            "id": 20,
             "name": "Compute Services",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
         {  
-            "sid": 19,
+            "id": 19,
             "name": "Networking",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
         {
-            "sid": 18,
+            "id": 18,
             "name": "Storage Service",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
         {
-            "sid": 17,
+            "id": 17,
             "name": "Big Data",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
         {
-            "sid": 16,
+            "id": 16,
             "name": "Security and Identity Managment",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
         {
-            "sid": 15,
+            "id": 15,
             "name": "Operation Tools",
             "desc": "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         },
@@ -90,7 +90,7 @@ const Dashboard:React.FC = () => {
     const handleCreate = async () => {
         await axios.post("http://localhost:5000/services/create",{
             name:service.toLowerCase(),
-            desc:desc
+            dsc:desc
         }).then( async(res) => {
             console.log(res);
             setState(!state);
@@ -105,9 +105,8 @@ const Dashboard:React.FC = () => {
     const deleteCard = async(id:number) => {
         // const newdata = data.filter( p => p.name !== cname);
         // setdata(newdata);
-        await axios.post("http://localhost:5000/services/delete",{
-            id
-        }).then( async(res) => {
+        await axios.delete(`http://localhost:5000/services/delete/${id}`)
+        .then( async(res) => {
             console.log(res);
             setState(!state);
         })
@@ -117,8 +116,8 @@ const Dashboard:React.FC = () => {
         })
     }
 
-    const handleUpdate = async(id:number,name:string,desc:string) => {
-        await axios.put("http://localhost:5000/services/edit",{id,name,desc})
+    const handleUpdate = async(id:number,name:string,dsc:string) => {
+        await axios.put("http://localhost:5000/services/edit",{id,name,dsc})
         .then( res => {
             // console.log(res.data.msg);
             setState(!state);
@@ -136,7 +135,7 @@ const Dashboard:React.FC = () => {
     })
 
     const handleEdit = (id:number) => {
-        const newData:ServiceData[] = data.filter( p => p.sid===id);
+        const newData:ServiceData[] = data.filter( p => p.id===id);
         setEditData(newData[0]);
         setdesc(newData[0].desc);
         setservice(newData[0].name);
@@ -244,7 +243,7 @@ const Dashboard:React.FC = () => {
                         <button 
                             type="button" 
                             className="btn btn-primary"
-                            onClick={() => handleUpdate(editData.sid,service,desc)}
+                            onClick={() => handleUpdate(editData.id,service,desc)}
                             data-bs-dismiss="modal"
                         >
                             Save Edit Changes
@@ -263,8 +262,8 @@ const Dashboard:React.FC = () => {
                             <div key={p.name} className={styles.card}>
                                 <div className='card'>
                                     <div className="card-header d-flex justify-content-between">
-                                        <button className='btn' data-bs-toggle="modal" data-bs-target="#tryModal" onClick={() => handleEdit(p.sid)} ><FaEdit size={'20'} /></button>
-                                        <button className='btn' onClick={() => deleteCard(p.sid)}><AiFillDelete size={'25'} /></button>
+                                        <button className='btn' data-bs-toggle="modal" data-bs-target="#tryModal" onClick={() => handleEdit(p.id)} ><FaEdit size={'20'} /></button>
+                                        <button className='btn' onClick={() => deleteCard(p.id)}><AiFillDelete size={'25'} /></button>
                                     </div>
                                     <Link href={`/dashboard/${p.name.toLowerCase()}`} className='text-decoration-none text-black'>
                                         <div className="card-body rounded shadow-lg p-4 d-flex flex-column align-items-center text-center">

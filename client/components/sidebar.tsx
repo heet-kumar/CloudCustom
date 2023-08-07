@@ -52,7 +52,7 @@ const Sidebar:React.FC = () => {
         const getData = async() => {
             await axios.get("http://localhost:5000/services/all")
             .then( res => {
-                // console.log(res.data);
+                console.log("Sidebar : ",res.data);
                 setdata(res.data.msg);
             })
             .catch( err => {

@@ -21,7 +21,7 @@ const Header:React.FC = () => {
         const getData = async() => {
             await axios.get("http://localhost:5000/services/all")
             .then( res => {
-                console.log(res.data.msg)
+                console.log("Header : ",res.data)
                 setdata(res.data.msg);
             })
             .catch( err => {
@@ -36,12 +36,11 @@ const Header:React.FC = () => {
     return(
         <div className="d-flex justify-content-between w-100 p-3 position-fixed shadow-lg" style={{backgroundColor: '#262f3d', zIndex: '12'}}>
             <div className="fw-bolder text-light fs-2">
-                HashedIn
-                <span className="text-danger" style={{fontSize: '115%'}}>Cloud</span>
+                Cloud
+                <span className="text-danger" style={{fontSize: '115%'}}>Custom</span>
             </div>
             {
                 (router.asPath !== '/' && router.asPath !== '/signup')?
-
                 <div className="d-flex justify-content-between w-50">
                     <Autocomplete
                         id="free-solo-demo"
